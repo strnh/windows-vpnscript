@@ -1,0 +1,40 @@
+# ---------------------------------------------------------------------------------------
+# Initial version: http://www.webboise.com/windows-powershell-script-for-adding-ip-routes-across-a-vpn/
+# by Chris @ 30.9.2008
+# ---------------------------------------------------------------------------------------
+# Modified version: http://simpleverse.wordpress.com/2010/10/06/add-routes-on-vpn-connect-with-powershell-and-task-scheduler
+# by Luka Ferle? @ 6.10.2010
+#---------------------------------------------------------------------------------------
+# modified by kabbalah (http://erirun.net/), 2012-01-07
+#-----
+# Last Modified by Sotaro.Hikosaka  2021/12/29
+#
+$OutputEncoding = [console]::OutputEncoding
+# Configuration
+# Route IP address
+#
+#
+$ips = @("192.168.100.0")
+# VPN connection IP
+$vpnIP = (Get-NetIPAddress -InterfaceAlias "[[TARGET VPNName]]" ).IPAddress
+# delete route
+foreach($ip in $ips) {
+ $hasRoute = route print | findstr $ip
+ if($hasRoute) {
+ "Deleting route " + $ip
+ route delete $ip
+ }
+}
+$vpnip = ipconfig | findstr $vpnIP
+if (!$vpnip) {
+ "You do not have an IP address on the VPN"
+ exit
+}
+$vpnip = $vpnip.Trim().Split(" ")
+$bit = $vpnip.Length - 1
+$vpnip = $vpnip[$bit]
+foreach($ip in $ips) {
+ "Adding route " + $ip
+ route add $ip MASK 255.255.255.0 $vpnip
+}
+
