@@ -7,14 +7,14 @@
 #---------------------------------------------------------------------------------------
 # modified by kabbalah (http://erirun.net/), 2012-01-07
 #-----
-# Last Modified by Sotaro.Hikosaka  2021/12/29
+# Last Modified by strnh  2021/12/29
 #
 $OutputEncoding = [console]::OutputEncoding
 # Configuration
 # Route IP address
 #
 #
-$ips = @("192.168.100.0")
+$ips = @("[[TARGET VPN Internal IPv4 ADDRESS]]")
 # VPN connection IP
 $vpnIP = (Get-NetIPAddress -InterfaceAlias "[[TARGET VPNName]]" ).IPAddress
 # delete route
